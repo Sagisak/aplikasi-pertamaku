@@ -10,7 +10,7 @@ services:
         STUDENT_NIM: "00000065503"
     container_name: vue_app_container
     ports:
-      - "3000:8080"  # Map the frontend port
+      - "3001:8080"  # Map the frontend port
     environment:
       - HOST=0.0.0.0
       - PORT=8080  # Update to match the frontend's port
@@ -26,7 +26,7 @@ services:
         STUDENT_NIM: "00000065503"
     container_name: backend_container
     ports:
-      - "4000:4000"  # Map the backend port
+      - "3000:3000"  # Map the backend port
     networks:
       - app_network
 

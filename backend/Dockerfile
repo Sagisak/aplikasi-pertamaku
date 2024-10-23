@@ -22,7 +22,7 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # Expose the port the backend app will run on (usually 4000 for Express)
-EXPOSE 4000
+EXPOSE 3000
 
 # Start the backend application using pnpm
 CMD ["pnpm", "start"]
