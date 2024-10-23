@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  vue-app:
+    build:
+      context: ./frontend  # Set the context to the frontend directory
+      dockerfile: Dockerfile  # Point to the Dockerfile in the frontend directory
+      args: 
+        STUDENT_NAME: "Leonardo Tyoes Huibu"
+        STUDENT_NIM: "00000065503"
+    container_name: vue_app_container
+    ports:
+      - "3000:8080"  # Map the frontend port
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080  # Update to match the frontend's port
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: ./backend  # Set the context to the backend directory
+      dockerfile: Dockerfile  # Ensure this points to the correct Dockerfile for the backend
+      args: 
+        STUDENT_NAME: "Leonardo Tyoes Huibu"
+        STUDENT_NIM: "00000065503"
+    container_name: backend_container
+    ports:
+      - "4000:4000"  # Map the backend port
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
