@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import CommentSection from './components/CommentSection.vue';
 
 const userId = ref('');
@@ -7,35 +7,76 @@ const users = ref(null);
 const oldEmail = ref('');
 const newEmail = ref('');
 const emailUserId = ref('');
-const token = ref(''); // Store the token
+const token = ref(''); // Retrieve token from local storage
+const successMessage = ref(''); // Reactive variable for success message
 
+// Fetch the token when the component is mounted
+const fetchToken = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/user/token');
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem('authToken', data.token); // Store token securely
+      token.value = data.token; // You can still keep it in a ref for immediate use
+    } else {
+      console.error('Failed to fetch token:', response.status);
+    }
+  } catch (error) {
+    console.error('Error fetching token:', error);
+  }
+};
+
+// Get the token from localStorage when needed
+const getToken = () => {
+  return localStorage.getItem('authToken');
+};
+
+// Fetch user info
 const getUser = async () => {
-  const response = await fetch(`http://localhost:3000/api/user/${userId.value}`);
+  const response = await fetch(`http://localhost:3000/api/user/${userId.value}`, {
+    headers: {
+      'Authorization': getToken(), // Include the token for this request
+    },
+  });
 
   if (response.ok) {
     const data = await response.json();
     users.value = data.user;
-    token.value = data.token; // Store the retrieved token
   } else {
     console.error('Failed to fetch user data:', response.status);
   }
 };
 
+// Change email
 const changeEmail = async () => {
-  await fetch(`http://localhost:3000/api/user/${emailUserId.value}/change-email`, {
+  const response = await fetch(`http://localhost:3000/api/user/${emailUserId.value}/change-email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': token.value, // Include the token in the request
+      'Authorization': getToken(), // Include the token in the request
     },
     body: JSON.stringify({
       oldEmail: oldEmail.value,
       newEmail: newEmail.value,
     }),
   });
-};
-</script>
 
+  if (response.ok) {
+    successMessage.value = 'Email updated successfully to ' + newEmail.value; // Update success message
+    // Optionally, clear the email input fields
+    oldEmail.value = '';
+    newEmail.value = '';
+  } else {
+    console.error('Failed to change email:', response.status);
+    successMessage.value = ''; // Clear success message if there's an error
+  }
+};
+
+// Fetch the token when the component is mounted
+onMounted(() => {
+  fetchToken();
+});
+</script>
 
 <template>
   <div id="app">
@@ -54,9 +95,12 @@ const changeEmail = async () => {
     <form @submit.prevent="changeEmail">
       <h3>Change Email</h3>
       <input v-model="emailUserId" placeholder="User ID for Email Change" />
-      <input v-model="oldEmail" placeholder="Old Email" /> <!-- New input for Old Email -->
+      <input v-model="oldEmail" placeholder="Old Email" />
       <input v-model="newEmail" placeholder="New Email" />
       <button type="submit">Submit</button>
     </form>
+    <div v-if="successMessage" style="color: green; margin-top: 10px;">
+      {{ successMessage }} <!-- Display success message -->
+    </div>
   </div>
 </template>

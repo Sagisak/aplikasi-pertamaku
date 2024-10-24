@@ -13,34 +13,34 @@ app.use(cors({
 }));
 
 const connection = new sqlite3.Database('./db/aplikasi.db');
-const userTokens = {};
-
-// Generate a unique token for a user ID
-const generateToken = (userId) => {
-  const token = uuidv4();
-  userTokens[token] = userId; // Store the token with user ID
-  return token;
-};
+let userToken = null ; // Store user session tokens
 
 // Middleware to validate tokens
 const validateToken = (req, res, next) => {
   const token = req.headers['authorization'];
-  if (!token || !userTokens[token]) {
+  if (!token || !userToken) {
     return res.status(403).send('Forbidden');
   }
-  // Attach the user ID to the request object for later use
-  req.userId = userTokens[token];
+  // Attach a placeholder user ID to the request object for later use
   next();
 };
+
+// Generate a new session token
+const generateToken = () => {
+  const token = uuidv4();
+  userToken = token; // Store the token without a specific user ID
+  return token;
+};
+
+// Endpoint to generate and return a token
+app.get('/api/user/token', (req, res) => {
+  const token = generateToken(); // Generate a token
+  res.json({ token }); // Send the token back to the client
+});
 
 // Securely get user info by ID with token validation
 app.get('/api/user/:id', validateToken, (req, res) => {
   const userId = req.params.id;
-
-  // Validate user ID from the request
-  if (req.userId !== userId) {
-    return res.status(403).send('Access Denied: You do not have permission to access this resource');
-  }
 
   const query = `SELECT name FROM users WHERE id = ?`;
   const params = [userId];
@@ -51,11 +51,8 @@ app.get('/api/user/:id', validateToken, (req, res) => {
       return res.status(500).send('Internal Server Error');
     }
 
-    // Generate token for this request (if needed)
-    const token = generateToken(userId);
-
-    // Return user data and token
-    res.json({ user: results, token });
+    // Return user data
+    res.json({ user: results });
   });
 });
 
