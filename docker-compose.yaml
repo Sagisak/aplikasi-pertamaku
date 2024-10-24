@@ -9,10 +9,11 @@ services:
         STUDENT_NAME: "Leonardo Tyoes Huibu"
         STUDENT_NIM: "00000065503"
     container_name: vue_app_container
-    # No need to expose 5173 as we are using Nginx to serve
-    # environment:
-    #   - HOST=0.0.0.0
-    #   - PORT=5173 # This is no longer necessary
+    expose:
+      - "5173"  # Expose the frontend port internally
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5173 # Update to match the frontend's port
     networks:
       - app_network
 
@@ -30,9 +31,7 @@ services:
       - app_network
 
   nginx:
-    build:
-      context: ./nginx  # Set the context to where your Nginx Dockerfile is (if you have a Dockerfile for custom Nginx image)
-      dockerfile: Dockerfile  # You may have a custom Dockerfile for Nginx if needed
+    image: nginx:latest
     container_name: nginx_container
     ports:
       - "80:80"  # Expose port 80 to the host
@@ -40,7 +39,6 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Map your custom nginx configuration
     depends_on:
       - vue-app
-      - backend  # Ensure the backend is also available before starting Nginx
     networks:
       - app_network
 
