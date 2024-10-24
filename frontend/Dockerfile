@@ -1,6 +1,5 @@
-# Stage 1: Build the Vue.js application
-# Use Node 20 as the base image for building the app
-FROM node:20 AS builder
+# Use Node 20 as the base image
+FROM node:20
 
 # Define build arguments
 ARG STUDENT_NAME
@@ -22,22 +21,12 @@ RUN npm install -g pnpm
 # Install frontend dependencies using pnpm
 RUN pnpm install
 
-# Build the Vue app
+# Build the Vue app (optional for dev mode, but necessary for production)
 RUN pnpm run build
 
-# Stage 2: Serve the app with Nginx
-# Use Nginx as the base image for serving the app
-FROM nginx:alpine
+# Expose the port the Vite app will run on (default is 5173)
+EXPOSE 5173
 
-# Copy built files from the previous stage
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy custom Nginx configuration if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose the default port for Nginx
-EXPOSE 80
-
-# Start Nginx (default command for Nginx)
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Vite development server
+CMD ["pnpm", "dev", "--host", "0.0.0.0"]  # Use dev to start the Vite server
 
