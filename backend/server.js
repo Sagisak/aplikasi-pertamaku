@@ -7,16 +7,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 app.use(express.json());
+const cors = require('cors');
 app.use(cors({
-   origin: ['https://localhost/leonardo/',
-           'https://localhost',
-           'https://localhost:80',
-          'http://20.70.138.106/leonardo/',
-          'https://20.70.138.106',
-            'https://20.70.138.106',
-	  ],
-  optionsSuccessStatus: 200,
+  origin: 'http://20.70.138.106', // Allow your frontend domain to access
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true,
 }));
+
 
 
 const connection = new sqlite3.Database('./db/aplikasi.db');
