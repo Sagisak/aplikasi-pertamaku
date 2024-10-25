@@ -8,7 +8,13 @@ import { v4 as uuidv4 } from 'uuid';
 const app = express();
 app.use(express.json());
 app.use(cors({
-   origin: ['http://http://20.70.138.106'],
+   origin: ['https://localhost/leonardo/',
+           'https://localhost',
+           'https://localhost:80',
+          'http://20.70.138.106/leonardo/',
+          'https://20.70.138.106',
+            'https://20.70.138.106',
+	  ],
   optionsSuccessStatus: 200,
 }));
 
