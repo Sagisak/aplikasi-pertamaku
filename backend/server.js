@@ -12,7 +12,10 @@ app.use(cors({
     'http://20.70.138.106',           // Main server
     'http://localhost:5173',          // If Vite is running on 5173
     'http://20.70.138.106:80',        // Port 80 if explicitly used
-    'http://20.70.138.106/leonardo',  // Specific path if needed
+    'http://20.70.138.106/leonardo',
+    'http://localhost:5173/leonardo/',
+    'http://172.19.0.2:5173/leonardo/'
+    // Specific path if needed
   ],
   optionsSuccessStatus: 200,
 }));
