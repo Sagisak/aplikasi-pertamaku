@@ -8,13 +8,15 @@ import { v4 as uuidv4 } from 'uuid';
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: ['http://20.70.138.106',
-           'http://20.70.138.106:80',
-           'http://localhost',
-           'http://localhost:80',
-           'http://20.70.138.106/leonardo/'],
+  origin: [
+    'http://20.70.138.106',           // Main server
+    'http://localhost:5173',          // If Vite is running on 5173
+    'http://20.70.138.106:80',        // Port 80 if explicitly used
+    'http://20.70.138.106/leonardo',  // Specific path if needed
+  ],
   optionsSuccessStatus: 200,
 }));
+
 
 const connection = new sqlite3.Database('./db/aplikasi.db');
 let userToken = null ; // Store user session tokens
