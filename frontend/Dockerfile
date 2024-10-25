@@ -1,5 +1,5 @@
-# Stage 1: Build the Vue app
-FROM node:20 AS builder
+# Use Node 20 as the base image
+FROM node:20
 
 # Define build arguments
 ARG STUDENT_NAME
@@ -12,8 +12,8 @@ ENV NUXT_STUDENT_NIM=${STUDENT_NIM}
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+# Copy all files from the context (frontend only)
+COPY . .
 
 # Install pnpm globally
 RUN npm install -g pnpm
@@ -21,18 +21,12 @@ RUN npm install -g pnpm
 # Install frontend dependencies using pnpm
 RUN pnpm install
 
-# Copy the rest of the application files
-COPY . .
-
-# Build the Vue app
+# Build the Vue app (optional for dev mode, but necessary for production)
 RUN pnpm run build
 
-# Stage 2: Create the final image with Nginx
-FROM nginx:latest
+# Expose the port the Vite app will run on (default is 5173)
+EXPOSE 5173
 
-# Copy the built Vue app to the Nginx directory
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Expose port 80 for Nginx
-EXPOSE 80
+# Start the Vite development server
+CMD ["pnpm", "dev", "--host", "0.0.0.0"]  # Use dev to start the Vite server
 
