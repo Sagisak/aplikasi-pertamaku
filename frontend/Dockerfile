@@ -27,6 +27,3 @@ RUN pnpm run build
 # Expose the port the Vite app will run on (default is 5173)
 EXPOSE 5173
 
-# Start the Vite development server
-CMD ["pnpm", "dev", "--host", "0.0.0.0"]  # Use dev to start the Vite server
-
