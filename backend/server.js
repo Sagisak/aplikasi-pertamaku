@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 app.use(express.json());
-const cors = require('cors');
 app.use(cors({
   origin: 'http://20.70.138.106', // Allow your frontend domain to access
   methods: 'GET,POST,PUT,DELETE',
