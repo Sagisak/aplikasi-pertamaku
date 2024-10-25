@@ -13,7 +13,9 @@ app.use(cors({
     'http://172.17.0.3:3000',  // Add this if accessing directly from the container IP
     'http://20.70.138.106',    // Add your public server IP if necessary
     'http://localhost:5173',   // Frontend running on Vite
-    'http://172.17.0.2:5173',  // Another Docker container running frontend
+    'http://172.17.0.2:5173',
+    'http://20.70.138.106:80/leonardo/',
+    'http://20.70.138.106/leonardo/',// Another Docker container running frontend
   ],
   optionsSuccessStatus: 200,
 }));
