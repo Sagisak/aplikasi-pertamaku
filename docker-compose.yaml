@@ -3,30 +3,43 @@ version: '3.8'
 services:
   vue-app:
     build:
-      context: ./frontend  # Set the context to the frontend directory
-      dockerfile: Dockerfile  # Point to the Dockerfile in the frontend directory
+      context: ./frontend
+      dockerfile: Dockerfile
       args: 
         STUDENT_NAME: "Leonardo Tyoes Huibu"
         STUDENT_NIM: "00000065503"
     container_name: vue_app_container
-    ports:
-      - "80:80"  # Expose port 80 to the host
-    networks:
-      - app_network
+    expose:
+      - "5173"  # Expose the frontend port internally
     environment:
       - HOST=0.0.0.0
-      - PORT=80 # Port for Nginx to serve the built Vue app
+      - PORT=5173
+    networks:
+      - app_network
 
   backend:
     build:
-      context: ./backend  # Set the context to the backend directory
-      dockerfile: Dockerfile  # Ensure this points to the correct Dockerfile for the backend
+      context: ./backend
+      dockerfile: Dockerfile
       args: 
         STUDENT_NAME: "Leonardo Tyoes Huibu"
         STUDENT_NIM: "00000065503"
     container_name: backend_container
     expose:
-      - "3000"  # Expose the backend port internally
+      - "3000"
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_container
+    ports:
+      - "80:80"  # Expose port 80 to the host
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Map your custom nginx configuration
+    depends_on:
+      - vue-app
+      - backend
     networks:
       - app_network
 
