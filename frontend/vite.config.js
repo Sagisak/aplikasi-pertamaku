@@ -6,14 +6,19 @@ export default defineConfig({
   plugins: [vue()],
   base: '/leonardo/',
   server: {
-    host: '0.0.0.0', // Ensure the server listens on all interfaces for Docker
-    port: 5173, // Make sure this matches your Docker configuration
+    host: '0.0.0.0',
+    port: 5173,
     proxy: {
       '/api': {
-        target: 'http://backend-container:3000', // Replace with the name of your backend Docker container
-        changeOrigin: true, // Needed for virtual hosted sites
-        secure: false, // If the backend uses HTTPS with a self-signed certificate, use this option
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
       },
+    },
+    hmr: {
+      host: '20.70.138.106',
+      protocol: 'ws',
+      port: 5173,
     },
   },
 });
