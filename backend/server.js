@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: '*',
+  origin: 'http://20.70.138.106',
   optionsSuccessStatus: 200,
 }));
 
