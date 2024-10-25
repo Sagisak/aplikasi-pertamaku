@@ -13,7 +13,7 @@ const successMessage = ref(''); // Reactive variable for success message
 // Fetch the token when the component is mounted
 const fetchToken = async () => {
   try {
-    const response = await fetch('api/user/token');
+    const response = await fetch('http://localhost/api/user/token');
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem('authToken', data.token); // Store token securely
@@ -33,7 +33,7 @@ const getToken = () => {
 
 // Fetch user info
 const getUser = async () => {
-  const response = await fetch(`api/user/${userId.value}`, {
+  const response = await fetch(`http://localhost/api/user/${userId.value}`, {
     headers: {
       'Authorization': getToken(), // Include the token for this request
     },
@@ -49,7 +49,7 @@ const getUser = async () => {
 
 // Change email
 const changeEmail = async () => {
-  const response = await fetch(`api/user/${emailUserId.value}/change-email`, {
+  const response = await fetch(`http://localhost/api/user/${emailUserId.value}/change-email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
