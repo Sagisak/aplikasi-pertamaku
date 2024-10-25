@@ -8,15 +8,13 @@ import { v4 as uuidv4 } from 'uuid';
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: [
-    'http://localhost',
-    'http://172.17.0.3:3000',  // Add this if accessing directly from the container IP
-    'http://20.70.138.106',    // Add your public server IP if necessary
-    'http://localhost:5173',   // Frontend running on Vite
-    'http://172.17.0.2:5173',
-    'http://20.70.138.106:80/leonardo/',
-    'http://20.70.138.106/leonardo/',// Another Docker container running frontend
-  ],
+   origin: ['https://localhost/leonardo/',
+           'https://localhost',
+           'https://localhost:80',
+          'http://20.70.138.106/leonardo/',
+          'https://20.70.138.106',
+            'https://20.70.138.106:80',
+	  ],
   optionsSuccessStatus: 200,
 }));
 
