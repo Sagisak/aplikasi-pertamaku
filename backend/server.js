@@ -9,16 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cors({
   origin: [
-     'http://localhost',
-    'http://20.70.138.106',           // Main server
-    'http://localhost:5173',          // If Vite is running on 5173
-    'http://20.70.138.106:80/leonardo/',
-     'http://20.70.138.106',
-    // Port 80 if explicitly used
-    'http://20.70.138.106/leonardo',
-    'http://localhost:5173/leonardo/',
-    'http://172.19.0.2:5173/leonardo/'
-    // Specific path if needed
+    'http://localhost',
+    'http://172.17.0.3:3000',  // Add this if accessing directly from the container IP
+    'http://20.70.138.106',    // Add your public server IP if necessary
+    'http://localhost:5173',   // Frontend running on Vite
+    'http://172.17.0.2:5173',  // Another Docker container running frontend
   ],
   optionsSuccessStatus: 200,
 }));
